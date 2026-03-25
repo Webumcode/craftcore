@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRAFTCORE | Minecraft server</title>
+  <!-- Simple modern fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0c10;
+      color: #e8edf2;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Background slideshow */
+    .bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+
+    .bg-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .bg-slide.active {
+      opacity: 1;
+    }
+
+    .bg-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.4) blur(4px);
+    }
+
+    /* Simple overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(10, 12, 16, 0.7) 0%, rgba(5, 7, 12, 0.85) 100%);
+      z-index: -1;
+    }
+
+    /* Navigation - clean and minimal */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 18, 24, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1rem 2rem;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      height: 36px;
+      width: auto;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: #b0b8c5;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #fff;
+    }
+
+    /* Main content - centered */
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .center-content {
+      max-width: 700px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Logo - large and centered */
+    .logo-large {
+      max-width: 320px;
+      width: 100%;
+      height: auto;
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
+      transition: transform 0.2s ease;
+    }
+
+    .logo-large:hover {
+      transform: scale(1.02);
+    }
+
+    /* Badge */
+    .badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #8a9b6e;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Headline */
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .highlight {
+      color: #8fc97f;
+    }
+
+    /* Description */
+    .description {
+      font-size: 1rem;
+      color: #b0b8c2;
+      margin-bottom: 1.8rem;
+      line-height: 1.6;
+      max-width: 550px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Features list - clean inline */
+    .features-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .feature i {
+      color: #8fc97f;
+      font-size: 0.75rem;
+    }
+
+    /* Buttons */
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.75rem 1.8rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: #2c5a2a;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #3c6e3a;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: rgba(88, 101, 242, 0.9);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5865f2;
+      transform: translateY(-2px);
+    }
+
+    /* IP display */
+    .ip-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-family: monospace;
+      color: #cbd5e1;
+      border: 1px solid rgba(143, 201, 127, 0.2);
+    }
+
+    .ip-display i {
+      color: #8fc97f;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 1.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(10, 12, 16, 0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .footer p {
+      font-size: 0.75rem;
+      color: #6c727c;
+    }
+
+    .footer a {
+      color: #8fc97f;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #a8e098;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1e232b;
+      color: #e2e8f0;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      opacity: 0;
+      transition: all 0.2s;
+      pointer-events: none;
+      z-index: 1000;
+      font-family: monospace;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Simple fade animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .logo-large {
+        max-width: 220px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .description {
+        font-size: 0.9rem;
+        padding: 0 1rem;
+      }
+      .btn {
+        padding: 0.6rem 1.4rem;
+        font-size: 0.8rem;
+      }
+      .navbar {
+        padding: 0.8rem 1.2rem;
+      }
+      .nav-inner {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      .nav-links {
+        gap: 1.2rem;
+      }
+      .features-list {
+        gap: 0.8rem;
+      }
+      .feature {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background slideshow -->
+<div class="bg-container">
+  <div class="bg-slide active">
+    <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774106428/minecraft-vanilla_nglmuy.png" alt="Minecraft background">
+  </div>
+  <div class="bg-slide">
+    <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774449433/bc2_ei7xiy.png" alt="Minecraft landscape">
+  </div>
+  <div class="bg-slide">
+    <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774449433/bc3_lifhmi.jpg" alt="Minecraft village">
+  </div>
+  <div class="bg-slide">
+    <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774449432/bc4_ntqcip.jpg" alt="Minecraft nether">
+  </div>
+</div>
+<div class="overlay"></div>
+
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo-area">
+      <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774447246/ChatGPT_Image_25._3._2026_15_00_34_u4tdiz.png" alt="CRAFTCORE" class="logo-icon">
+      <span class="logo-text">CRAFTCORE</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Úvod</a>
+      <a href="tym.html">Tým</a>
+      <a href="pravidla.html">Pravidla</a>
+      <a href="dynmapa.html">Dynmapa</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Main content - centered with large logo -->
+<main class="main">
+  <div class="center-content">
+    <!-- Large logo centered -->
+    <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774447246/ChatGPT_Image_25._3._2026_15_00_34_u4tdiz.png" alt="CRAFTCORE" class="logo-large fade-in">
+    
+    <div class="badge fade-in">MINECRAFT SERVER</div>
+    
+    <h1 class="fade-in">
+      <span class="highlight">CRAFTCORE</span>
+    </h1>
+    
+    <p class="description fade-in">
+      Komunitní Minecraft server s přátelskou atmosférou, stabilním provozem a unikátním světem.
+      Připoj se k nám a zažij dobrodružství.
+    </p>
+    
+    <div class="features-list fade-in">
+      <div class="feature"><i class="fas fa-check-circle"></i> 24/7 provoz</div>
+      <div class="feature"><i class="fas fa-check-circle"></i> Verze 1.20+</div>
+      <div class="feature"><i class="fas fa-check-circle"></i> Aktivní komunita</div>
+      <div class="feature"><i class="fas fa-check-circle"></i> Žádný pay-to-win</div>
+    </div>
+    
+    <div class="buttons fade-in">
+      <button class="btn btn-primary" id="copyBtn">
+        <i class="fas fa-copy"></i> Zkopírovat IP
+      </button>
+      <a href="https://discord.gg/craftcore" target="_blank" class="btn btn-secondary">
+        <i class="fab fa-discord"></i> Discord
+      </a>
+    </div>
+    
+    <div class="ip-display fade-in">
+      <i class="fas fa-terminal"></i>
+      <span>play.craftcore.net</span>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>Vytvořeno s láskou <a href="https://drezyss.vercel.app/" target="_blank">Drezyssdev</a> — © 2026 CRAFTCORE</p>
+</footer>
+
+<div class="toast" id="toast">✓ IP adresa zkopírována</div>
+
+<script>
+  (function() {
+    // Simple background slideshow
+    const slides = document.querySelectorAll('.bg-slide');
+    let current = 0;
+    
+    if (slides.length > 1) {
+      setInterval(() => {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+      }, 8000);
+    }
+    
+    // Copy IP functionality
+    const SERVER_IP = "play.craftcore.net";
+    const copyBtn = document.getElementById('copyBtn');
+    const toast = document.getElementById('toast');
+    
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+    
+    async function copyIP() {
+      try {
+        await navigator.clipboard.writeText(SERVER_IP);
+        showToast(`✓ ${SERVER_IP} zkopírováno`);
+      } catch (err) {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = SERVER_IP;
+        document.body.appendChild(textarea);
+        textarea.select();
+        const success = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        if (success) {
+          showToast(`✓ ${SERVER_IP} zkopírováno`);
+        } else {
+          showToast(`✗ Kopírování selhalo`);
+        }
+      }
+    }
+    
+    if (copyBtn) {
+      copyBtn.addEventListener('click', copyIP);
+    }
+    
+    // Simple fade-in animation
+    const fadeElements = document.querySelectorAll('.fade-in');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    fadeElements.forEach(el => observer.observe(el));
+    
+    // Activate visible elements immediately
+    setTimeout(() => {
+      fadeElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 50) {
+          el.classList.add('visible');
+        }
+      });
+    }, 100);
+    
+    // Set active nav based on current URL
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (currentPath === '/' || currentPath === '/index.html') {
+        if (href === 'index.html') link.classList.add('active');
+        else link.classList.remove('active');
+      } else if (currentPath.includes(href) && href !== 'index.html') {
+        link.classList.add('active');
+      } else if (href === 'index.html' && !currentPath.includes('tym') && !currentPath.includes('pravidla') && !currentPath.includes('dynmapa')) {
+        link.classList.add('active');
+      }
+    });
+  })();
+</script>
+</body>
+</html>
