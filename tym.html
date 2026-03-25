@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Tým | CRAFTCORE</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -36,9 +36,10 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    body {
+    html, body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg-dark);
       color: var(--text-primary);
@@ -46,6 +47,7 @@
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
       overflow-x: hidden;
+      touch-action: manipulation;
     }
 
     /* Background */
@@ -57,6 +59,7 @@
       height: 100%;
       z-index: -2;
       overflow: hidden;
+      pointer-events: none;
     }
 
     .bg-slide {
@@ -89,26 +92,27 @@
       background: radial-gradient(ellipse at 20% 20%, rgba(143, 201, 127, 0.1) 0%, transparent 50%),
                   linear-gradient(135deg, rgba(10, 12, 16, 0.9) 0%, rgba(5, 7, 12, 0.98) 100%);
       z-index: -1;
+      pointer-events: none;
     }
 
-    /* Navigation - STEJNÉ JAKO INDEX */
+    /* Navigation */
     .navbar {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      background: rgba(15, 18, 24, 0.8);
+      background: rgba(15, 18, 24, 0.9);
       backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--glass-border);
-      padding: 1rem 2rem;
+      padding: 1rem 1.5rem;
       z-index: 1000;
       transition: all 0.3s var(--transition-smooth);
     }
 
     .navbar.scrolled {
-      background: rgba(15, 18, 24, 0.9);
-      padding: 0.8rem 2rem;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      background: rgba(15, 18, 24, 0.95);
+      padding: 0.8rem 1.5rem;
     }
 
     .nav-inner {
@@ -118,37 +122,29 @@
       align-items: center;
       justify-content: space-between;
       gap: 2rem;
-      flex-wrap: wrap;
     }
 
     .logo-area {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       text-decoration: none;
-      position: relative;
-      z-index: 1001;
+      z-index: 1002;
     }
 
     .logo-icon {
-      height: 40px;
+      height: 36px;
       width: auto;
       filter: drop-shadow(0 0 20px rgba(143, 201, 127, 0.4));
-      transition: transform 0.3s var(--transition-smooth);
-    }
-
-    .logo-area:hover .logo-icon {
-      transform: rotate(5deg) scale(1.05);
     }
 
     .logo-text {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 700;
       background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
     }
 
     /* Desktop navigation */
@@ -164,60 +160,41 @@
       font-weight: 500;
       padding: 0.6rem 1.2rem;
       border-radius: 50px;
-      transition: all 0.3s var(--transition-smooth);
-      position: relative;
-      overflow: hidden;
+      transition: all 0.3s;
     }
 
-    .nav-links a::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, var(--glass) 0%, transparent 100%);
-      opacity: 0;
-      transition: opacity 0.3s;
-      border-radius: 50px;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
+    .nav-links a:hover, .nav-links a.active {
       color: var(--text-primary);
-      transform: translateY(-2px);
-    }
-
-    .nav-links a:hover::before,
-    .nav-links a.active::before {
-      opacity: 1;
-    }
-
-    .nav-links a.active {
       background: var(--glass);
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
-    /* Mobile menu button - STEJNÉ JAKO INDEX */
+    /* Mobile menu button - VYLEPŠENÝ */
     .menu-toggle {
       display: none;
-      background: none;
-      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
       cursor: pointer;
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       position: relative;
-      z-index: 1001;
-      padding: 8px;
+      z-index: 1002;
+      padding: 10px;
+      border-radius: 10px;
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+    }
+
+    .menu-toggle:active {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(0.95);
     }
 
     .menu-toggle span {
       display: block;
-      width: 24px;
+      width: 22px;
       height: 2px;
       background: #fff;
-      margin: 5px 0;
+      margin: 5px auto;
       transition: all 0.3s ease;
       border-radius: 2px;
     }
@@ -228,29 +205,34 @@
 
     .menu-toggle.active span:nth-child(2) {
       opacity: 0;
+      transform: scaleX(0);
     }
 
     .menu-toggle.active span:nth-child(3) {
       transform: rotate(-45deg) translate(5px, -5px);
     }
 
-    /* Mobile menu overlay - STEJNÉ JAKO INDEX */
+    /* Mobile menu - VYLEPŠENÉ PRO MOBIL */
     .mobile-menu {
       position: fixed;
       top: 0;
       right: -100%;
-      width: 80%;
-      max-width: 300px;
+      width: 85%;
+      max-width: 320px;
       height: 100vh;
+      height: 100dvh; /* Dynamic viewport height pro mobil */
       background: rgba(10, 12, 18, 0.98);
-      backdrop-filter: blur(20px);
-      z-index: 999;
-      padding: 5rem 2rem 2rem;
-      transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      z-index: 1001;
+      padding: 5rem 1.5rem 2rem;
+      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 0.5rem;
+      border-left: 1px solid var(--glass-border);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .mobile-menu.open {
@@ -258,41 +240,48 @@
     }
 
     .mobile-menu a {
-      color: #e0e5ec;
+      color: var(--text-secondary);
       text-decoration: none;
       font-size: 1.1rem;
       font-weight: 500;
-      padding: 0.8rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 12px;
       transition: all 0.2s;
       display: flex;
       align-items: center;
       gap: 12px;
+      border: 1px solid transparent;
     }
 
     .mobile-menu a:hover,
     .mobile-menu a.active {
-      color: #8fc97f;
-      padding-left: 10px;
+      color: var(--primary);
+      background: var(--glass);
+      border-color: var(--glass-border);
+      padding-left: 1.2rem;
     }
 
     .mobile-menu a i {
       width: 24px;
       text-align: center;
+      font-size: 1.1rem;
     }
 
-    /* Overlay when menu is open */
+    /* Menu overlay */
     .menu-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 998;
+      height: 100dvh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 999;
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s ease;
+      touch-action: none;
     }
 
     .menu-overlay.active {
@@ -302,21 +291,21 @@
 
     /* Main Content */
     .main {
-      padding: 8rem 2rem 4rem;
+      padding: 7rem 1rem 3rem;
       max-width: 1200px;
       margin: 0 auto;
     }
 
     .page-header {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: 3rem;
     }
 
     .page-header h1 {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 700;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       background: linear-gradient(135deg, var(--primary) 0%, var(--accent-light) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -324,71 +313,62 @@
 
     .page-header p {
       color: var(--text-secondary);
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
     /* Team Sections */
     .team-section {
-      margin-bottom: 4rem;
+      margin-bottom: 3rem;
     }
 
     .section-header {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
       border-bottom: 2px solid var(--glass-border);
     }
 
     .section-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       object-fit: contain;
       background: var(--glass);
-      padding: 8px;
+      padding: 6px;
       border: 1px solid var(--glass-border);
     }
 
     .section-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 600;
-      color: var(--text-primary);
     }
 
     /* Team Grid */
     .team-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
     }
 
-    /* Team Card */
+    /* Team Card - MOBILNÍ OPTIMALIZACE */
     .team-card {
       background: var(--glass);
       border: 1px solid var(--glass-border);
-      border-radius: 24px;
+      border-radius: 20px;
       overflow: hidden;
       position: relative;
-      transition: all 0.4s var(--transition-smooth);
-      min-height: 420px;
-    }
-
-    .team-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--primary);
-      box-shadow: var(--shadow-glow);
+      transition: all 0.3s var(--transition-smooth);
     }
 
     .card-inner {
-      padding: 1.5rem;
+      padding: 1.2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      height: 100%;
       position: relative;
       z-index: 1;
     }
@@ -396,127 +376,102 @@
     /* Skin Container */
     .skin-container {
       width: 100%;
-      height: 200px;
+      height: 160px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
       position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .skin-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at center, rgba(143, 201, 127, 0.1) 0%, transparent 70%);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .team-card:hover .skin-container::before {
-      opacity: 1;
     }
 
     .mc-skin {
-      max-height: 180px;
+      max-height: 140px;
       max-width: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
       transition: transform 0.3s;
-      image-rendering: pixelated;
-    }
-
-    .team-card:hover .mc-skin {
-      transform: scale(1.05);
     }
 
     /* Role Badge */
     .role-badge {
       display: inline-flex;
       align-items: center;
-      padding: 0.4rem 1rem;
+      padding: 0.35rem 0.9rem;
       border-radius: 50px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
       color: white;
     }
 
-    .role-owner { background: var(--role-owner); box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
-    .role-dev { background: var(--role-dev); box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3); }
-    .role-admin { background: var(--role-admin); box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3); }
-    .role-builder { background: var(--role-builder); box-shadow: 0 4px 15px rgba(255, 165, 2, 0.3); }
-    .role-helper { background: var(--role-helper); box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3); }
+    .role-owner { background: var(--role-owner); }
+    .role-dev { background: var(--role-dev); }
+    .role-admin { background: var(--role-admin); }
+    .role-builder { background: var(--role-builder); }
+    .role-helper { background: var(--role-helper); }
 
     .member-name {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--text-primary);
+      margin-bottom: 0.4rem;
     }
 
     .member-desc {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: auto;
-      flex-grow: 1;
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
     }
 
-    /* Action Overlay */
+    /* Action Overlay - MOBILNÍ ŘEŠENÍ */
     .action-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(10, 12, 16, 0.85);
-      backdrop-filter: blur(8px);
+      background: rgba(10, 12, 16, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
+      gap: 0.8rem;
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s var(--transition-smooth);
-      padding: 1.5rem;
+      padding: 1.2rem;
       z-index: 10;
     }
 
-    .team-card:hover .action-overlay {
+    /* Na mobilu zobrazit overlay kliknutím místo hoveru */
+    .team-card.show-overlay .action-overlay {
       opacity: 1;
       visibility: visible;
     }
 
     .overlay-skin {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       object-fit: contain;
-      margin-bottom: 0.5rem;
-      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
     }
 
     .overlay-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--primary);
-      margin-bottom: 0.5rem;
     }
 
     .overlay-stats {
       display: flex;
-      gap: 1.5rem;
-      margin-bottom: 1rem;
+      gap: 1.2rem;
+      margin-bottom: 0.5rem;
     }
 
     .stat {
@@ -527,7 +482,7 @@
     }
 
     .stat i {
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     .stat.positive { color: #2ed573; }
@@ -535,17 +490,16 @@
     .stat.negative { color: #ff4757; }
 
     .stat-value {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 700;
-      color: var(--text-primary);
     }
 
     .overlay-actions {
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0.5rem;
       width: 100%;
-      max-width: 200px;
+      max-width: 180px;
     }
 
     .btn-overlay {
@@ -553,25 +507,21 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      padding: 0.7rem 1rem;
-      border-radius: 12px;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
       border: none;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
       text-decoration: none;
       width: 100%;
+      touch-action: manipulation;
     }
 
     .btn-overlay-discord {
       background: #5865f2;
       color: white;
-    }
-
-    .btn-overlay-discord:hover {
-      background: #4752c4;
-      transform: scale(1.02);
     }
 
     .btn-overlay-message {
@@ -580,55 +530,61 @@
       border: 1px solid var(--glass-border);
     }
 
-    .btn-overlay-message:hover {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
     .btn-overlay-rate {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
     }
 
-    .btn-overlay-rate:hover {
-      transform: scale(1.02);
-      box-shadow: 0 4px 20px rgba(143, 201, 127, 0.4);
+    .btn-overlay-rate:disabled {
+      opacity: 0.6;
     }
 
-    .btn-overlay-rate:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    /* Close button for mobile overlay */
+    .btn-close-overlay {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
     }
 
     /* Empty slots */
     .empty-slot {
       opacity: 0.5;
       border-style: dashed;
-      border-color: var(--text-muted);
     }
 
     .empty-slot .card-inner {
       justify-content: center;
-      min-height: 350px;
+      min-height: 280px;
     }
 
-    /* Rating Modal */
+    /* Rating Modal - MOBILNÍ OPTIMALIZACE */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 2000;
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s;
+      padding: 1rem;
     }
 
     .modal-overlay.active {
@@ -639,10 +595,12 @@
     .modal {
       background: var(--bg-card);
       border: 1px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 2rem;
-      max-width: 450px;
-      width: 90%;
+      border-radius: 20px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
       transform: scale(0.9);
       transition: transform 0.3s;
     }
@@ -653,117 +611,109 @@
 
     .modal-header {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .modal-avatar {
-      width: 100px;
-      height: 100px;
+      width: 80px;
+      height: 80px;
       object-fit: contain;
-      margin-bottom: 1rem;
-      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+      margin-bottom: 0.5rem;
     }
 
     .modal h2 {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.5rem;
-      margin-bottom: 0.3rem;
+      font-size: 1.3rem;
+      margin-bottom: 0.2rem;
     }
 
     .modal-subtitle {
       color: var(--text-secondary);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     .rating-options {
       display: flex;
-      gap: 1rem;
+      gap: 0.8rem;
       justify-content: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .rating-option {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
-      padding: 1rem;
-      border-radius: 16px;
+      gap: 0.4rem;
+      padding: 0.8rem;
+      border-radius: 12px;
       border: 2px solid var(--glass-border);
       background: var(--glass);
       cursor: pointer;
-      transition: all 0.3s;
-      min-width: 80px;
+      transition: all 0.2s;
+      flex: 1;
+      min-width: 0;
     }
-
-    .rating-option:hover {
-      border-color: var(--primary);
-      transform: translateY(-3px);
-    }
-
-    .rating-option.selected {
-      border-color: var(--primary);
-      background: rgba(143, 201, 127, 0.1);
-    }
-
-    .rating-option.positive.selected { border-color: #2ed573; background: rgba(46, 213, 115, 0.1); }
-    .rating-option.neutral.selected { border-color: #ffa502; background: rgba(255, 165, 2, 0.1); }
-    .rating-option.negative.selected { border-color: #ff4757; background: rgba(255, 71, 87, 0.1); }
 
     .rating-option i {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
+    }
+
+    .rating-option span {
+      font-size: 0.75rem;
+      font-weight: 500;
     }
 
     .rating-option.positive { color: #2ed573; }
     .rating-option.neutral { color: #ffa502; }
     .rating-option.negative { color: #ff4757; }
 
-    .rating-option span {
-      font-size: 0.8rem;
-      font-weight: 500;
+    .rating-option.selected {
+      border-color: var(--primary);
+      background: rgba(143, 201, 127, 0.15);
     }
 
+    .rating-option.positive.selected { border-color: #2ed573; background: rgba(46, 213, 115, 0.15); }
+    .rating-option.neutral.selected { border-color: #ffa502; background: rgba(255, 165, 2, 0.15); }
+    .rating-option.negative.selected { border-color: #ff4757; background: rgba(255, 71, 87, 0.15); }
+
     .comment-section {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .comment-section label {
       display: block;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
       color: var(--text-secondary);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     .comment-section textarea {
       width: 100%;
       background: var(--glass);
       border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      padding: 0.8rem;
+      border-radius: 10px;
+      padding: 0.7rem;
       color: var(--text-primary);
       font-family: inherit;
+      font-size: 0.9rem;
       resize: vertical;
-      min-height: 80px;
-    }
-
-    .comment-section textarea:focus {
-      outline: none;
-      border-color: var(--primary);
+      min-height: 70px;
     }
 
     .modal-actions {
       display: flex;
-      gap: 1rem;
+      gap: 0.8rem;
     }
 
     .modal-actions button {
       flex: 1;
-      padding: 0.8rem;
-      border-radius: 12px;
+      padding: 0.7rem;
+      border-radius: 10px;
       border: none;
       font-weight: 600;
+      font-size: 0.9rem;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
     }
 
     .btn-submit {
@@ -771,13 +721,8 @@
       color: white;
     }
 
-    .btn-submit:hover:not(:disabled) {
-      background: var(--primary-light);
-    }
-
     .btn-submit:disabled {
       opacity: 0.5;
-      cursor: not-allowed;
     }
 
     .btn-cancel {
@@ -786,29 +731,27 @@
       border: 1px solid var(--glass-border);
     }
 
-    .btn-cancel:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-primary);
-    }
-
     /* Toast */
     .toast {
       position: fixed;
-      bottom: 30px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
       background: var(--bg-card);
       color: var(--text-primary);
-      padding: 1rem 2rem;
-      border-radius: 16px;
+      padding: 0.8rem 1.5rem;
+      border-radius: 12px;
       border: 1px solid var(--glass-border);
       backdrop-filter: blur(20px);
-      opacity: 0;
-      transition: all 0.4s;
       z-index: 3000;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+      max-width: 90%;
     }
 
     .toast.show {
@@ -819,61 +762,16 @@
     .toast.success { border-color: #2ed573; }
     .toast.error { border-color: #ff4757; }
 
-    /* Responsive - STEJNÉ JAKO INDEX */
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
-      
-      .menu-toggle {
-        display: block;
-      }
-      
-      .navbar {
-        padding: 0.8rem 1.2rem;
-      }
-      
-      .logo-icon {
-        height: 36px;
-      }
-      
-      .logo-text {
-        font-size: 1.2rem;
-      }
-      
-      .team-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .page-header h1 {
-        font-size: 2rem;
-      }
-      
-      .skin-container {
-        height: 160px;
-      }
-      
-      .mc-skin {
-        max-height: 140px;
-      }
-      
-      .mobile-menu {
-        width: 85%;
-        max-width: none;
-      }
+    /* Touch hint for mobile */
+    .touch-hint {
+      display: none;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-style: italic;
     }
 
-    @media (max-width: 480px) {
-      .page-header h1 {
-        font-size: 1.8rem;
-      }
-      
-      .section-title {
-        font-size: 1.4rem;
-      }
-    }
-
-    /* Loading state */
+    /* Loading */
     .loading {
       display: inline-block;
       width: 16px;
@@ -881,19 +779,103 @@
       border: 2px solid rgba(255,255,255,.3);
       border-radius: 50%;
       border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
+      animation: spin 1s linear infinite;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
 
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+    /* DESKTOP - hover funguje normálně */
+    @media (hover: hover) and (pointer: fine) {
+      .team-card:hover .action-overlay {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .touch-hint {
+        display: none !important;
+      }
+
+      .btn-close-overlay {
+        display: none;
+      }
+    }
+
+    /* MOBILNÍ STYLY */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none !important;
+      }
+
+      .menu-toggle {
+        display: block !important;
+      }
+
+      .navbar {
+        padding: 0.8rem 1rem;
+      }
+
+      .main {
+        padding: 6rem 0.8rem 2rem;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+      }
+
+      .team-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+
+      .team-card {
+        min-height: auto;
+      }
+
+      .skin-container {
+        height: 140px;
+      }
+
+      .mc-skin {
+        max-height: 120px;
+      }
+
+      /* Na mobilu zobrazit hint */
+      .touch-hint {
+        display: block;
+      }
+
+      /* Mobilní menu úpravy */
+      .mobile-menu {
+        width: 90%;
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-header h1 {
+        font-size: 1.6rem;
+      }
+
+      .section-title {
+        font-size: 1.2rem;
+      }
+
+      .rating-options {
+        gap: 0.5rem;
+      }
+
+      .rating-option {
+        padding: 0.6rem 0.4rem;
+      }
+
+      .rating-option i {
+        font-size: 1.1rem;
+      }
+
+      .rating-option span {
+        font-size: 0.7rem;
       }
     }
   </style>
@@ -907,24 +889,22 @@
 </div>
 <div class="overlay"></div>
 
-<!-- Navigation - STEJNÁ STRUKTURA JAKO INDEX -->
+<!-- Navigation -->
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
     <a href="index.html" class="logo-area">
       <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774447246/ChatGPT_Image_25._3._2026_15_00_34_u4tdiz.png" alt="CRAFTCORE" class="logo-icon">
       <span class="logo-text">CRAFTCORE</span>
     </a>
-    
-    <!-- Desktop navigation -->
+
     <div class="nav-links">
       <a href="index.html">Úvod</a>
       <a href="tym.html" class="active">Tým</a>
       <a href="pravidla.html">Pravidla</a>
       <a href="dynmapa.html">Dynmapa</a>
     </div>
-    
-    <!-- Mobile menu button -->
-    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu" type="button">
       <span></span>
       <span></span>
       <span></span>
@@ -932,7 +912,7 @@
   </div>
 </nav>
 
-<!-- Mobile menu - STEJNÉ JAKO INDEX -->
+<!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="index.html"><i class="fas fa-home"></i> Úvod</a>
   <a href="tym.html" class="active"><i class="fas fa-users"></i> Tým</a>
@@ -954,23 +934,28 @@
       <h2 class="section-title">Vedení</h2>
     </div>
     <div class="team-grid" id="vedeni-grid">
-      
+
       <!-- Drezyss - Owner -->
-      <div class="team-card" data-member-id="drezyss" data-member-name="Drezyss">
+      <div class="team-card" data-member-id="drezyss" data-member-name="Drezyss" onclick="toggleOverlay(this)">
         <div class="card-inner">
           <div class="skin-container">
             <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774453876/bxrko-bust-1_ef5xx4.webp" alt="Drezyss" class="mc-skin">
           </div>
-          
+
           <span class="role-badge role-owner">Majitel</span>
           <h3 class="member-name">Drezyss</h3>
           <p class="member-desc">Hlavní majitel serveru, zodpovědný za celkový chod a strategii CRAFTCORE.</p>
+          <p class="touch-hint">Klepněte pro více akcí</p>
         </div>
 
-        <div class="action-overlay">
+        <div class="action-overlay" onclick="event.stopPropagation()">
+          <button class="btn-close-overlay" onclick="closeOverlay(event)">
+            <i class="fas fa-times"></i>
+          </button>
+
           <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774453876/bxrko-bust-1_ef5xx4.webp" alt="" class="overlay-skin">
           <div class="overlay-title">Drezyss</div>
-          
+
           <div class="overlay-stats">
             <div class="stat positive">
               <i class="fas fa-thumbs-up"></i>
@@ -987,13 +972,13 @@
           </div>
 
           <div class="overlay-actions">
-            <a href="https://discord.com/users/1481610001054302319" class="btn-overlay btn-overlay-discord" target="_blank" onclick="event.stopPropagation()">
+            <a href="https://discord.com/users/1481610001054302319" class="btn-overlay btn-overlay-discord" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-discord"></i> Discord
             </a>
-            <button class="btn-overlay btn-overlay-message" onclick="event.stopPropagation(); openMessage('Drezyss')">
+            <button class="btn-overlay btn-overlay-message" onclick="openMessage('Drezyss')">
               <i class="fas fa-envelope"></i> Zpráva
             </button>
-            <button class="btn-overlay btn-overlay-rate" id="rate-btn-drezyss" onclick="event.stopPropagation(); openRatingModal('drezyss', 'Drezyss')">
+            <button class="btn-overlay btn-overlay-rate" id="rate-btn-drezyss" onclick="openRatingModal('drezyss', 'Drezyss')">
               <i class="fas fa-star"></i> OHODNOTIT
             </button>
           </div>
@@ -1002,8 +987,8 @@
 
       <div class="team-card empty-slot">
         <div class="card-inner">
-          <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-          <p style="color: var(--text-muted);">Volno pro dalšího člena</p>
+          <i class="fas fa-plus" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem;"></i>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Volno pro dalšího člena</p>
         </div>
       </div>
     </div>
@@ -1018,14 +1003,8 @@
     <div class="team-grid" id="dev-grid">
       <div class="team-card empty-slot">
         <div class="card-inner">
-          <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-          <p style="color: var(--text-muted);">Volno pro developera</p>
-        </div>
-      </div>
-      <div class="team-card empty-slot">
-        <div class="card-inner">
-          <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-          <p style="color: var(--text-muted);">Volno pro developera</p>
+          <i class="fas fa-plus" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem;"></i>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Volno pro developera</p>
         </div>
       </div>
     </div>
@@ -1040,14 +1019,8 @@
     <div class="team-grid" id="admin-grid">
       <div class="team-card empty-slot">
         <div class="card-inner">
-          <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-          <p style="color: var(--text-muted);">Volno pro admina</p>
-        </div>
-      </div>
-      <div class="team-card empty-slot">
-        <div class="card-inner">
-          <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-          <p style="color: var(--text-muted);">Volno pro admina</p>
+          <i class="fas fa-plus" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem;"></i>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Volno pro admina</p>
         </div>
       </div>
     </div>
@@ -1062,14 +1035,8 @@
     <div class="team-grid" id="builder-grid">
       <div class="team-card empty-slot">
         <div class="card-inner">
-          <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-          <p style="color: var(--text-muted);">Volno pro buildera</p>
-        </div>
-      </div>
-      <div class="team-card empty-slot">
-        <div class="card-inner">
-          <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-          <p style="color: var(--text-muted);">Volno pro buildera</p>
+          <i class="fas fa-plus" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem;"></i>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Volno pro buildera</p>
         </div>
       </div>
     </div>
@@ -1084,14 +1051,8 @@
     <div class="team-grid" id="helper-grid">
       <div class="team-card empty-slot">
         <div class="card-inner">
-          <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-          <p style="color: var(--text-muted);">Volno pro helpera</p>
-        </div>
-      </div>
-      <div class="team-card empty-slot">
-        <div class="card-inner">
-          <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-          <p style="color: var(--text-muted);">Volno pro helpera</p>
+          <i class="fas fa-plus" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem;"></i>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Volno pro helpera</p>
         </div>
       </div>
     </div>
@@ -1099,14 +1060,14 @@
 </main>
 
 <!-- Rating Modal -->
-<div class="modal-overlay" id="ratingModal">
+<div class="modal-overlay" id="ratingModal" onclick="if(event.target === this) closeRatingModal()">
   <div class="modal">
     <div class="modal-header">
       <img src="" alt="" class="modal-avatar" id="modalAvatar">
       <h2>Ohodnotit člena</h2>
       <p class="modal-subtitle" id="modalMemberName">Jméno člena</p>
     </div>
-    
+
     <div class="rating-options">
       <div class="rating-option positive" onclick="selectRating('positive')" data-rating="positive">
         <i class="fas fa-thumbs-up"></i>
@@ -1130,7 +1091,7 @@
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeRatingModal()">Zrušit</button>
       <button class="btn-submit" id="submitRating" onclick="submitRating()" disabled>
-        Odeslat hodnocení
+        Odeslat
       </button>
     </div>
   </div>
@@ -1143,18 +1104,11 @@
 </div>
 
 <script>
-// Mobile menu functionality - STEJNÉ JAKO INDEX
+// ===== MOBILNÍ MENU =====
 const menuToggle = document.getElementById('menuToggle');
 const mobileMenu = document.getElementById('mobileMenu');
 const menuOverlay = document.getElementById('menuOverlay');
 const navbar = document.getElementById('navbar');
-
-function closeMenu() {
-  mobileMenu.classList.remove('open');
-  menuOverlay.classList.remove('active');
-  menuToggle.classList.remove('active');
-  document.body.style.overflow = '';
-}
 
 function openMenu() {
   mobileMenu.classList.add('open');
@@ -1163,42 +1117,82 @@ function openMenu() {
   document.body.style.overflow = 'hidden';
 }
 
-if (menuToggle) {
-  menuToggle.addEventListener('click', () => {
-    if (mobileMenu.classList.contains('open')) {
-      closeMenu();
-    } else {
-      openMenu();
-    }
-  });
+function closeMenu() {
+  mobileMenu.classList.remove('open');
+  menuOverlay.classList.remove('active');
+  menuToggle.classList.remove('active');
+  document.body.style.overflow = '';
 }
 
-if (menuOverlay) {
-  menuOverlay.addEventListener('click', closeMenu);
-}
+// Klik na hamburger
+menuToggle.addEventListener('click', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (mobileMenu.classList.contains('open')) {
+    closeMenu();
+  } else {
+    openMenu();
+  }
+});
 
-// Close menu when clicking on a link
+// Klik na overlay zavře menu
+menuOverlay.addEventListener('click', closeMenu);
+
+// Klik na link v menu zavře menu
 document.querySelectorAll('.mobile-menu a').forEach(link => {
   link.addEventListener('click', closeMenu);
 });
 
-// Close menu on window resize (if switching to desktop)
+// Zavřít menu při resize na desktop
 window.addEventListener('resize', () => {
   if (window.innerWidth > 768 && mobileMenu.classList.contains('open')) {
     closeMenu();
   }
 });
 
-// Navbar scroll effect
+// Navbar scroll efekt
 window.addEventListener('scroll', () => {
-  if (window.pageYOffset > 50) {
+  if (window.scrollY > 50) {
     navbar.classList.add('scrolled');
   } else {
     navbar.classList.remove('scrolled');
   }
 });
 
-// Supabase configuration
+// ===== OVERLAY PRO MOBIL =====
+let activeCard = null;
+
+function toggleOverlay(card) {
+  // Pokud už je tato karta aktivní, zavřít
+  if (activeCard === card) {
+    closeOverlay();
+    return;
+  }
+
+  // Zavřít předchozí
+  closeOverlay();
+
+  // Otevřít novou
+  card.classList.add('show-overlay');
+  activeCard = card;
+}
+
+function closeOverlay(e) {
+  if (e) e.stopPropagation();
+  if (activeCard) {
+    activeCard.classList.remove('show-overlay');
+    activeCard = null;
+  }
+}
+
+// Zavřít overlay kliknutím mimo
+document.addEventListener('click', (e) => {
+  if (activeCard && !activeCard.contains(e.target)) {
+    closeOverlay();
+  }
+});
+
+// ===== HODNOCENÍ =====
 const SUPABASE_URL = 'https://yescguhijwgzsjyvqlvk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inllc2NndWhpandnenNqeXZxbHZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NDE0MDAsImV4cCI6MjA4OTUxNzQwMH0.x9vb2b61eAyxJrzHkUCLjLcX284iE0lhffRWZpd80Iw';
 const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1486379029752713367/2KqDT7OeDLIrsOTPrnS-zlj3K_HP1BFmy6qdYxvBURu6GvX7KbeYsqghmaCnpta5nOby';
@@ -1208,12 +1202,15 @@ let currentMemberId = null;
 let currentMemberName = null;
 let hasVoted = {};
 
-// Check localStorage for previous votes
 function checkPreviousVotes() {
-  const voted = localStorage.getItem('craftcore_votes');
-  if (voted) {
-    hasVoted = JSON.parse(voted);
-    updateVotedButtons();
+  try {
+    const voted = localStorage.getItem('craftcore_votes');
+    if (voted) {
+      hasVoted = JSON.parse(voted);
+      updateVotedButtons();
+    }
+  } catch (e) {
+    console.error('localStorage error:', e);
   }
 }
 
@@ -1236,19 +1233,19 @@ async function loadRatings() {
         'Authorization': `Bearer ${SUPABASE_KEY}`
       }
     });
-    
-    if (!response.ok) throw new Error('Failed to load ratings');
-    
+
+    if (!response.ok) throw new Error('Failed to load');
+
     const ratings = await response.json();
     const stats = {};
-    
+
     ratings.forEach(rating => {
       if (!stats[rating.member_id]) {
         stats[rating.member_id] = { positive: 0, neutral: 0, negative: 0 };
       }
       stats[rating.member_id][rating.rating_type]++;
     });
-    
+
     Object.keys(stats).forEach(memberId => {
       updateRatingDisplay(memberId, stats[memberId]);
     });
@@ -1261,7 +1258,7 @@ function updateRatingDisplay(memberId, stats) {
   const positiveEl = document.getElementById(`stats-${memberId}-positive`);
   const neutralEl = document.getElementById(`stats-${memberId}-neutral`);
   const negativeEl = document.getElementById(`stats-${memberId}-negative`);
-  
+
   if (positiveEl) positiveEl.textContent = stats.positive || 0;
   if (neutralEl) neutralEl.textContent = stats.neutral || 0;
   if (negativeEl) negativeEl.textContent = stats.negative || 0;
@@ -1272,19 +1269,18 @@ function openRatingModal(memberId, memberName) {
     showToast('Už jsi hodnotil tohoto člena!', 'error');
     return;
   }
-  
+
   currentMemberId = memberId;
   currentMemberName = memberName;
   currentRating = null;
-  
-  const avatarUrl = 'https://res.cloudinary.com/dvhvgspqm/image/upload/v1774453097/bxrko_iramta.png';
-  document.getElementById('modalAvatar').src = avatarUrl;
+
+  document.getElementById('modalAvatar').src = 'https://res.cloudinary.com/dvhvgspqm/image/upload/v1774453097/bxrko_iramta.png';
   document.getElementById('modalMemberName').textContent = memberName;
-  
+
   document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('selected'));
   document.getElementById('ratingComment').value = '';
   document.getElementById('submitRating').disabled = true;
-  
+
   document.getElementById('ratingModal').classList.add('active');
 }
 
@@ -1306,13 +1302,13 @@ function selectRating(type) {
 
 async function submitRating() {
   if (!currentRating || !currentMemberId) return;
-  
+
   const comment = document.getElementById('ratingComment').value.trim();
   const submitBtn = document.getElementById('submitRating');
-  
+
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<span class="loading"></span> Odesílání...';
-  
+
   try {
     const ratingData = {
       member_id: currentMemberId,
@@ -1322,7 +1318,7 @@ async function submitRating() {
       created_at: new Date().toISOString(),
       voter_ip: await getIP()
     };
-    
+
     const response = await fetch(`${SUPABASE_URL}/rest/v1/ratings`, {
       method: 'POST',
       headers: {
@@ -1333,21 +1329,21 @@ async function submitRating() {
       },
       body: JSON.stringify(ratingData)
     });
-    
-    if (!response.ok) throw new Error('Failed to save rating');
-    
+
+    if (!response.ok) throw new Error('Failed to save');
+
     await sendToDiscord(ratingData);
-    
+
     hasVoted[currentMemberId] = true;
     localStorage.setItem('craftcore_votes', JSON.stringify(hasVoted));
-    
+
     const rateBtn = document.getElementById(`rate-btn-${currentMemberId}`);
     if (rateBtn) {
       rateBtn.disabled = true;
       rateBtn.innerHTML = '<i class="fas fa-check"></i> OHODNOCENO';
       rateBtn.style.opacity = '0.7';
     }
-    
+
     const currentStats = {
       positive: parseInt(document.getElementById(`stats-${currentMemberId}-positive`).textContent),
       neutral: parseInt(document.getElementById(`stats-${currentMemberId}-neutral`).textContent),
@@ -1355,59 +1351,37 @@ async function submitRating() {
     };
     currentStats[currentRating]++;
     updateRatingDisplay(currentMemberId, currentStats);
-    
+
     closeRatingModal();
     showToast('Hodnocení bylo odesláno!', 'success');
-    
+
   } catch (error) {
-    console.error('Error submitting rating:', error);
-    showToast('Chyba při odesílání. Zkus to znovu.', 'error');
+    console.error('Error:', error);
+    showToast('Chyba při odesílání', 'error');
     submitBtn.disabled = false;
-    submitBtn.innerHTML = 'Odeslat hodnocení';
+    submitBtn.innerHTML = 'Odeslat';
   }
 }
 
 async function sendToDiscord(data) {
-  const emojiMap = {
-    positive: '👍',
-    neutral: '➖',
-    negative: '👎'
-  };
-  
-  const colorMap = {
-    positive: 3066993,
-    neutral: 16776960,
-    negative: 15158332
-  };
-  
+  const emojiMap = { positive: '👍', neutral: '➖', negative: '👎' };
+  const colorMap = { positive: 3066993, neutral: 16776960, negative: 15158332 };
+
   const embed = {
     title: `Nové hodnocení - ${data.member_name}`,
     color: colorMap[data.rating_type],
-    thumbnail: {
-      url: 'https://res.cloudinary.com/dvhvgspqm/image/upload/v1774453097/bxrko_iramta.png'
-    },
+    thumbnail: { url: 'https://res.cloudinary.com/dvhvgspqm/image/upload/v1774453097/bxrko_iramta.png' },
     fields: [
-      {
-        name: 'Typ hodnocení',
-        value: `${emojiMap[data.rating_type]} ${data.rating_type.toUpperCase()}`,
-        inline: true
-      },
-      {
-        name: 'Člen',
-        value: data.member_name,
-        inline: true
-      }
+      { name: 'Typ', value: `${emojiMap[data.rating_type]} ${data.rating_type.toUpperCase()}`, inline: true },
+      { name: 'Člen', value: data.member_name, inline: true }
     ],
     timestamp: new Date().toISOString()
   };
-  
+
   if (data.comment) {
-    embed.fields.push({
-      name: 'Komentář',
-      value: data.comment
-    });
+    embed.fields.push({ name: 'Komentář', value: data.comment });
   }
-  
+
   try {
     await fetch(DISCORD_WEBHOOK, {
       method: 'POST',
@@ -1415,7 +1389,7 @@ async function sendToDiscord(data) {
       body: JSON.stringify({ embeds: [embed] })
     });
   } catch (error) {
-    console.error('Error sending to Discord:', error);
+    console.error('Discord error:', error);
   }
 }
 
@@ -1430,25 +1404,22 @@ async function getIP() {
 }
 
 function openMessage(memberName) {
-  showToast(`Zpráva pro ${memberName} - funkce připravována`, 'success');
+  showToast(`Zpráva pro ${memberName} - připravujeme`, 'success');
 }
 
 function showToast(message, type = 'success') {
   const toast = document.getElementById('toast');
   const toastMessage = document.getElementById('toastMessage');
-  
+
   toast.className = `toast ${type}`;
   toast.querySelector('i').className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
   toastMessage.textContent = message;
-  
+
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-document.getElementById('ratingModal').addEventListener('click', (e) => {
-  if (e.target === e.currentTarget) closeRatingModal();
-});
-
+// Inicializace
 document.addEventListener('DOMContentLoaded', () => {
   checkPreviousVotes();
   loadRatings();
