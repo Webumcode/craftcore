@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Pravidla | CRAFTCORE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #8fc97f;
+      --primary-light: #a8e098;
+      --primary-dark: #6b9e5e;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --bg-dark: #0a0c10;
+      --bg-card: rgba(20, 24, 32, 0.6);
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #ffffff;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --shadow-glow: 0 0 40px rgba(143, 201, 127, 0.15);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* Category colors */
+      --cat-minecraft: #4ade80;
+      --cat-discord: #5865f2;
+      --cat-web: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background */
+    .bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      overflow: hidden;
+    }
+
+    .bg-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.5s var(--transition-smooth);
+    }
+
+    .bg-slide.active {
+      opacity: 1;
+    }
+
+    .bg-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.25) saturate(1.2);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at 20% 20%, rgba(143, 201, 127, 0.1) 0%, transparent 50%),
+                  linear-gradient(135deg, rgba(10, 12, 16, 0.9) 0%, rgba(5, 7, 12, 0.98) 100%);
+      z-index: -1;
+    }
+
+    /* Floating particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 15s infinite;
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 18, 24, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      transition: all 0.3s var(--transition-smooth);
+    }
+
+    .navbar.scrolled {
+      background: rgba(15, 18, 24, 0.9);
+      padding: 0.8rem 2rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      position: relative;
+      z-index: 1001;
+    }
+
+    .logo-icon {
+      height: 40px;
+      width: auto;
+      filter: drop-shadow(0 0 20px rgba(143, 201, 127, 0.4));
+      transition: transform 0.3s var(--transition-smooth);
+    }
+
+    .logo-area:hover .logo-icon {
+      transform: rotate(5deg) scale(1.05);
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    /* Desktop navigation */
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      transition: all 0.3s var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-links a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--glass) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 50px;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    .nav-links a:hover::before,
+    .nav-links a.active::before {
+      opacity: 1;
+    }
+
+    .nav-links a.active {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Hamburger menu */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 48px;
+      height: 48px;
+      position: relative;
+      z-index: 1001;
+      padding: 12px;
+      border-radius: 12px;
+      transition: background 0.3s;
+    }
+
+    .menu-toggle:hover {
+      background: var(--glass);
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, #fff, var(--primary));
+      margin: 6px 0;
+      transition: all 0.4s var(--transition-smooth);
+      border-radius: 2px;
+      transform-origin: center;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      max-width: 400px;
+      height: 100vh;
+      background: rgba(10, 12, 18, 0.98);
+      backdrop-filter: blur(30px);
+      z-index: 999;
+      padding: 6rem 2rem 2rem;
+      transition: right 0.5s var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      border-left: 1px solid var(--glass-border);
+    }
+
+    .mobile-menu.open {
+      right: 0;
+    }
+
+    .mobile-menu a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 500;
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      transition: all 0.3s var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mobile-menu a::before {
+      content: '→';
+      position: absolute;
+      right: 20px;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s;
+    }
+
+    .mobile-menu a:hover,
+    .mobile-menu a.active {
+      color: var(--primary);
+      background: var(--glass);
+      padding-left: 2rem;
+    }
+
+    .mobile-menu a:hover::before,
+    .mobile-menu a.active::before {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s var(--transition-smooth);
+    }
+
+    .menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main Content */
+    .main {
+      padding: 8rem 2rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    /* Rules Container */
+    .rules-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    /* Rule Category */
+    .rule-category {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      overflow: hidden;
+      transition: all 0.4s var(--transition-smooth);
+    }
+
+    .rule-category:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .category-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .category-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      object-fit: contain;
+      background: var(--glass);
+      padding: 8px;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s;
+    }
+
+    .category-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .category-count {
+      margin-left: auto;
+      background: var(--glass);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .category-rules {
+      padding: 1rem;
+    }
+
+    /* Rule Item */
+    .rule-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      margin-bottom: 0.8rem;
+      overflow: hidden;
+      transition: all 0.3s var(--transition-smooth);
+    }
+
+    .rule-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .rule-item:hover {
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .rule-item.minecraft:hover {
+      border-color: var(--cat-minecraft);
+    }
+
+    .rule-item.discord:hover {
+      border-color: var(--cat-discord);
+    }
+
+    .rule-item.web:hover {
+      border-color: var(--cat-web);
+    }
+
+    .rule-header {
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .rule-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .minecraft .rule-number { background: var(--cat-minecraft); }
+    .discord .rule-number { background: var(--cat-discord); }
+    .web .rule-number { background: var(--cat-web); }
+
+    .rule-title {
+      font-weight: 500;
+      color: var(--text-primary);
+      flex-grow: 1;
+    }
+
+    .rule-toggle {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .rule-item.active .rule-toggle {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      transform: rotate(180deg);
+    }
+
+    .rule-item.minecraft.active .rule-toggle {
+      background: var(--cat-minecraft);
+      border-color: var(--cat-minecraft);
+    }
+
+    .rule-item.discord.active .rule-toggle {
+      background: var(--cat-discord);
+      border-color: var(--cat-discord);
+    }
+
+    .rule-item.web.active .rule-toggle {
+      background: var(--cat-web);
+      border-color: var(--cat-web);
+    }
+
+    .rule-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s var(--transition-smooth), padding 0.4s;
+    }
+
+    .rule-item.active .rule-content {
+      max-height: 500px;
+      padding: 0 1.2rem 1.2rem 3.2rem;
+    }
+
+    .rule-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .rule-consequences {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(255, 71, 87, 0.1);
+      border: 1px solid rgba(255, 71, 87, 0.2);
+      border-radius: 12px;
+    }
+
+    .rule-consequences-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: #ff4757;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .rule-consequences ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .rule-consequences li {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      padding: 0.3rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .rule-consequences li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: #ff4757;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--glass-border);
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .footer a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s;
+    }
+
+    .footer a:hover {
+      color: var(--primary-light);
+    }
+
+    .footer a:hover::after {
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      .rules-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .navbar {
+        padding: 1rem 1.5rem;
+      }
+
+      .logo-icon {
+        height: 36px;
+      }
+
+      .logo-text {
+        font-size: 1.2rem;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+      }
+
+      .category-title {
+        font-size: 1.2rem;
+      }
+
+      .category-icon {
+        width: 48px;
+        height: 48px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+<base target="_blank">
+</head>
+<body>
+
+<div class="bg-container">
+  <div class="bg-slide active">
+    <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774106428/minecraft-vanilla_nglmuy.png" alt="Background">
+  </div>
+</div>
+<div class="overlay"></div>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Navigation -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo-area">
+      <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774447246/ChatGPT_Image_25._3._2026_15_00_34_u4tdiz.png" alt="CRAFTCORE" class="logo-icon">
+      <span class="logo-text">CRAFTCORE</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html">Úvod</a>
+      <a href="tym.html">Tým</a>
+      <a href="pravidla.html" class="active">Pravidla</a>
+      <a href="dynmapa.html">Dynmapa</a>
+    </div>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html"><i class="fas fa-home"></i> Úvod</a>
+  <a href="tym.html"><i class="fas fa-users"></i> Tým</a>
+  <a href="pravidla.html" class="active"><i class="fas fa-book"></i> Pravidla</a>
+  <a href="dynmapa.html"><i class="fas fa-map"></i> Dynmapa</a>
+</div>
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<main class="main">
+  <div class="page-header">
+    <h1>Pravidla Serveru</h1>
+    <p>Dodržování pravidel je povinné pro všechny hráče</p>
+  </div>
+
+  <div class="rules-container">
+    <!-- Minecraft Pravidla -->
+    <div class="rule-category">
+      <div class="category-header">
+        <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774439297/973273-minecraft_ophnym.png" alt="Minecraft" class="category-icon">
+        <h2 class="category-title">Minecraft Pravidla</h2>
+        <span class="category-count">6 pravidel</span>
+      </div>
+      <div class="category-rules">
+
+        <div class="rule-item minecraft">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">1</span>
+            <span class="rule-title">Griefing je zakázán</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Destrukce cizích staveb, krádež itemů z chestek, ničení terénu kolem cizích staveb a jakékoliv poškození majetku jiných hráčů je přísně zakázáno.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Permanentní ban bez možnosti odvolání</li>
+                  <li>Rollback všech akcí griefera</li>
+                  <li>Obnova poškozeného majetku</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item minecraft">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">2</span>
+            <span class="rule-title">Cheating a hacky</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Používání jakéhokoliv software třetích stran, modifikací klienta, x-ray, aimbotů, fly hacků, speed hacků a dalších nedovolených pomůcek je zakázáno. Povolené jsou pouze vizuální módy (OptiFine, shaderpacky, resource packy).</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Permanentní ban</li>
+                  <li>Smazání inventáře a ender chesty</li>
+                  <li>Reset statistik</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item minecraft">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">3</span>
+            <span class="rule-title">Respektuj ostatní hráče</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Chovej se slušně k ostatním hráčům. Zakázáno je spamování chatu, caps lock, reklama, toxic chování, rasismus, sexismus, homofobie a jakékoliv formy obtěžování.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Varování → Mute 1h → Mute 24h → Permanentní mute</li>
+                  <li>Při závažném porušení okamžitý ban</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item minecraft">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">4</span>
+            <span class="rule-title">Nepodváděj v PvP</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Combat logging (odpojení se během boje), používání regen hacků, teleport hacků a jiných nedovolených výhod v PvP je zakázáno. Respektuj pravidla fair-play.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Temporární ban (7 dní)</li>
+                  <li>Ztráta všech PvP statistik</li>
+                  <li>Při opakování permanentní ban</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item minecraft">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">5</span>
+            <span class="rule-title">Lag machines a duplikace</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Vytváření strojů způsobujících lagy serveru, exploitování bugů pro duplikaci itemů, zneužívání chyb hry a jakékoliv formy poškození stability serveru jsou zakázány.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Permanentní ban</li>
+                  <li>Smazání duplikovaných itemů</li>
+                  <li>Destrukce lag machine</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item minecraft">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">6</span>
+            <span class="rule-title">Respektuj staff tým</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Poslouchej pokyny členů staff týmu. Neargumentuj s rozhodnutími adminů, nezneužívej report systém a neobviňuj staff z biasu bez důkazů. Při nesouhlasu kontaktuj majitele.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Varování → Temp ban 3 dny → Permanentní ban</li>
+                  <li>Při extrémním obtěžování okamžitý ban</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Discord Pravidla -->
+    <div class="rule-category">
+      <div class="category-header">
+        <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774439163/36967-3d-discord-logo_xe6hy4.png" alt="Discord" class="category-icon">
+        <h2 class="category-title">Discord Pravidla</h2>
+        <span class="category-count">5 pravidel</span>
+      </div>
+      <div class="category-rules">
+
+        <div class="rule-item discord">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">1</span>
+            <span class="rule-title">Používej správné kanály</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Píš do správných kanálů podle tématu. General chat je pro obecnou konverzaci, support kanály pro dotazy a problémy, showcase pro ukázky staveb. Neposílej NSFW obsah, reklamu bez povolení nebo spam.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Varování → Mute 2h → Mute 24h → Kick</li>
+                  <li>Při spamu okamžitý mute</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item discord">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">2</span>
+            <span class="rule-title">Žádná reklama</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Reklama jiných Minecraft serverů, Discord serverů, sociálních sítí, streamů nebo produktů je zakázána bez předchozího souhlasu vedení. Platí to i v DM ostatním členům.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Permanentní ban z Discordu</li>
+                  <li>Při opakování ban i z Minecraft serveru</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item discord">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">3</span>
+            <span class="rule-title">Slušné chování</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Udržuj přátelskou atmosféru. Zakázáno je toxic chování, flame wars, provokace, osobní útoky, doxxing, sharing osobních údajů a šíření dezinformací o serveru.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Varování → Mute 6h → Ban 7 dní → Permanentní ban</li>
+                  <li>Při doxxingu okamžitý permanentní ban</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item discord">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">4</span>
+            <span class="rule-title">Voice chat pravidla</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>V voice chatech nepoužívej soundboardy bez povolení, nehraj hlasitou hudbu, neřvi do mikrofonu a nezneužívej voice chat k spamu. Respektuj soukromí ostatních.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Varování → Voice mute 2h → Voice mute 24h</li>
+                  <li>Při opakování kick z Discordu</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item discord">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">5</span>
+            <span class="rule-title">Nahlášení problémů</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Problémy s hráči nebo bugy hlás přes ticket systém, ne v chatu. Falešná obvinění, zneužívání ticket systému nebo veřejné obviňování bez důkazů je zakázáno.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Varování → Odebrání přístupu k ticketům</li>
+                  <li>Při falešných obviněních temp ban 3 dny</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Web Pravidla -->
+    <div class="rule-category">
+      <div class="category-header">
+        <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774437154/7081-website_bzywer.png" alt="Web" class="category-icon">
+        <h2 class="category-title">Web Pravidla</h2>
+        <span class="category-count">4 pravidla</span>
+      </div>
+      <div class="category-rules">
+
+        <div class="rule-item web">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">1</span>
+            <span class="rule-title">Ohodnocení členů týmu</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Hodnocení členů týmu musí být fér a konstruktivní. Každý hráč může hodnotit každého člena týmu pouze jednou. Zakázáno je spam hodnocení, falešné obvinění a manipulace s výsledky.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Smazání neplatných hodnocení</li>
+                  <li>Blokace možnosti hodnotit</li>
+                  <li>Temp ban při manipulaci s výsledky</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item web">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">2</span>
+            <span class="rule-title">Správné používání webu</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Web slouží k prezentaci serveru, informacím o týmu a hodnocení. Nezneužívej funkce webu k spamu, automatizovaným útokům (DDoS, scraping) nebo pokusům o neoprávněný přístup.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>IP ban z webu</li>
+                  <li>Reportování ISP při závažných útocích</li>
+                  <li>Ban i z Minecraft serveru a Discordu</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item web">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">3</span>
+            <span class="rule-title">Respektuj soukromí</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Na webu jsou zobrazena veřejná data o členech týmu (Minecraft skin, jméno, role). Nesmíš tyto informace použít k obtěžování, doxxingu nebo mimo kontext serveru CRAFTCORE.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>Varování → Ban z webu a Discordu</li>
+                  <li>Při doxxingu permanentní ban všude</li>
+                  <li>Možné právní kroky</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-item web">
+          <div class="rule-header" onclick="toggleRule(this)">
+            <span class="rule-number">4</span>
+            <span class="rule-title">Autorská práva</span>
+            <span class="rule-toggle"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="rule-content">
+            <div class="rule-description">
+              <p>Veškerý obsah na webu (grafika, texty, kód) je majetkem CRAFTCORE. Kopírování designu, kódu nebo obsahu bez povolení je zakázáno. Minecraft skiny a ikony třetích stran patří jejich vlastníkům.</p>
+              <div class="rule-consequences">
+                <div class="rule-consequences-title">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Následky porušení
+                </div>
+                <ul>
+                  <li>DMCA takedown request</li>
+                  <li>Právní kroky při komerčním zneužití</li>
+                  <li>Ban z komunity</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>
+    Vytvořeno s <i class="fas fa-heart" style="color: var(--primary);"></i> od 
+    <a href="https://drezyss.vercel.app/" target="_blank">Drezyssdev</a> 
+    <span style="opacity: 0.5;">|</span> 
+    © 2026 CRAFTCORE
+  </p>
+</footer>
+
+<script>
+  // Generate floating particles
+  const particlesContainer = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 15 + 's';
+    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+    particlesContainer.appendChild(particle);
+  }
+
+  // Navbar scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  // Mobile menu functionality
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuOverlay = document.getElementById('menuOverlay');
+
+  function closeMenu() {
+    mobileMenu.classList.remove('open');
+    menuOverlay.classList.remove('active');
+    menuToggle.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function openMenu() {
+    mobileMenu.classList.add('open');
+    menuOverlay.classList.add('active');
+    menuToggle.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  menuToggle.addEventListener('click', () => {
+    mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  menuOverlay.addEventListener('click', closeMenu);
+
+  document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && mobileMenu.classList.contains('open')) {
+      closeMenu();
+    }
+  });
+
+  // Active nav state
+  const currentPath = window.location.pathname;
+  document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(link => {
+    const href = link.getAttribute('href');
+    link.classList.remove('active');
+    if (currentPath.includes(href) || (currentPath === '/' && href === 'index.html')) {
+      link.classList.add('active');
+    }
+  });
+
+  // Toggle rule function
+  function toggleRule(header) {
+    const ruleItem = header.parentElement;
+    const isActive = ruleItem.classList.contains('active');
+
+    // Close all other rules in the same category
+    const category = ruleItem.closest('.category-rules');
+    category.querySelectorAll('.rule-item.active').forEach(item => {
+      item.classList.remove('active');
+    });
+
+    // Toggle current rule
+    if (!isActive) {
+      ruleItem.classList.add('active');
+    }
+  }
+</script>
+
+</body>
+</html>
