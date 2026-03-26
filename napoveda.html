@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Nápověda | CRAFTCORE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #8fc97f;
+      --primary-light: #a8e098;
+      --primary-dark: #6b9e5e;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --bg-dark: #0a0c10;
+      --bg-card: rgba(20, 24, 32, 0.6);
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #ffffff;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --shadow-glow: 0 0 40px rgba(143, 201, 127, 0.15);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      overflow: hidden;
+    }
+
+    .bg-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.5s var(--transition-smooth);
+    }
+
+    .bg-slide.active {
+      opacity: 1;
+    }
+
+    .bg-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.25) saturate(1.2);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at 20% 20%, rgba(143, 201, 127, 0.1) 0%, transparent 50%),
+                  linear-gradient(135deg, rgba(10, 12, 16, 0.9) 0%, rgba(5, 7, 12, 0.98) 100%);
+      z-index: -1;
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 15s infinite;
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 18, 24, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      transition: all 0.3s var(--transition-smooth);
+    }
+
+    .navbar.scrolled {
+      background: rgba(15, 18, 24, 0.9);
+      padding: 0.8rem 2rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      position: relative;
+      z-index: 1001;
+    }
+
+    .logo-icon {
+      height: 40px;
+      width: auto;
+      filter: drop-shadow(0 0 20px rgba(143, 201, 127, 0.4));
+      transition: transform 0.3s var(--transition-smooth);
+    }
+
+    .logo-area:hover .logo-icon {
+      transform: rotate(5deg) scale(1.05);
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      transition: all 0.3s var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-links a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--glass) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 50px;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    .nav-links a:hover::before,
+    .nav-links a.active::before {
+      opacity: 1;
+    }
+
+    .nav-links a.active {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 48px;
+      height: 48px;
+      position: relative;
+      z-index: 1001;
+      padding: 12px;
+      border-radius: 12px;
+      transition: background 0.3s;
+    }
+
+    .menu-toggle:hover {
+      background: var(--glass);
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, #fff, var(--primary));
+      margin: 6px 0;
+      transition: all 0.4s var(--transition-smooth);
+      border-radius: 2px;
+      transform-origin: center;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      max-width: 400px;
+      height: 100vh;
+      background: rgba(10, 12, 18, 0.98);
+      backdrop-filter: blur(30px);
+      z-index: 999;
+      padding: 6rem 2rem 2rem;
+      transition: right 0.5s var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      border-left: 1px solid var(--glass-border);
+    }
+
+    .mobile-menu.open {
+      right: 0;
+    }
+
+    .mobile-menu a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 500;
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      transition: all 0.3s var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mobile-menu a::before {
+      content: '→';
+      position: absolute;
+      right: 20px;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s;
+    }
+
+    .mobile-menu a:hover,
+    .mobile-menu a.active {
+      color: var(--primary);
+      background: var(--glass);
+      padding-left: 2rem;
+    }
+
+    .mobile-menu a:hover::before,
+    .mobile-menu a.active::before {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s var(--transition-smooth);
+    }
+
+    .menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .main {
+      padding: 8rem 2rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* OPRAVENO - Flexbox místo grid */
+    .faq-grid {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+
+    .faq-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .faq-item {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.3s var(--transition-smooth);
+      width: 100%;
+    }
+
+    .faq-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-card);
+    }
+
+    .faq-item.active {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-card);
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 1.5rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: left;
+      transition: all 0.3s;
+    }
+
+    .faq-question:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .q-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .q-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .toggle-icon {
+      color: var(--text-secondary);
+      transition: transform 0.3s var(--transition-smooth);
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .faq-item.active .toggle-icon {
+      transform: rotate(90deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+    }
+
+    .answer-content {
+      padding: 0 1.5rem 1.5rem 4rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .answer-content p {
+      margin-bottom: 0.8rem;
+    }
+
+    .answer-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .cmm {
+      background: rgba(143, 201, 127, 0.15);
+      border: 1px solid rgba(143, 201, 127, 0.3);
+      border-radius: 8px;
+      padding: 0.2rem 0.6rem;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.85rem;
+      color: var(--primary-light);
+      display: inline-block;
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.85rem;
+      color: var(--primary-light);
+      margin: 0.8rem 0;
+      line-height: 1.5;
+    }
+
+    .text-primary {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .text-primary:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--glass-border);
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .footer a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s;
+    }
+
+    .footer a:hover {
+      color: var(--primary-light);
+    }
+
+    .footer a:hover::after {
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .navbar {
+        padding: 1rem 1.5rem;
+      }
+
+      .logo-icon {
+        height: 36px;
+      }
+
+      .logo-text {
+        font-size: 1.2rem;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+      }
+
+      /* Mobil - sloupce pod sebe */
+      .faq-grid {
+        flex-direction: column;
+      }
+
+      .faq-column {
+        width: 100%;
+      }
+
+      .q-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+      }
+
+      .faq-question {
+        padding: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .answer-content {
+        padding: 0 1rem 1rem 3.5rem;
+      }
+
+      .cmm {
+        font-size: 0.75rem;
+        padding: 0.15rem 0.5rem;
+      }
+    }
+  </style>
+<base target="_blank">
+</head>
+<body>
+
+<div class="bg-container">
+  <div class="bg-slide active">
+    <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774106428/minecraft-vanilla_nglmuy.png" alt="Background">
+  </div>
+</div>
+<div class="overlay"></div>
+
+<div class="particles" id="particles"></div>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo-area">
+      <img src="https://res.cloudinary.com/dvhvgspqm/image/upload/v1774447246/ChatGPT_Image_25._3._2026_15_00_34_u4tdiz.png" alt="CRAFTCORE" class="logo-icon">
+      <span class="logo-text">CRAFTCORE</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html">Úvod</a>
+      <a href="tym.html">Tým</a>
+      <a href="pravidla.html">Pravidla</a>
+      <a href="napoveda.html" class="active">Nápověda</a>
+      <a href="dynmapa.html">Dynmapa</a>
+    </div>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html"><i class="fas fa-home"></i> Úvod</a>
+  <a href="tym.html"><i class="fas fa-users"></i> Tým</a>
+  <a href="pravidla.html"><i class="fas fa-book"></i> Pravidla</a>
+  <a href="napoveda.html" class="active"><i class="fas fa-question-circle"></i> Nápověda</a>
+  <a href="dynmapa.html"><i class="fas fa-map"></i> Dynmapa</a>
+</div>
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<main class="main">
+  <div class="page-header">
+    <h1>Často kladené dotazy</h1>
+    <p>Odpovědi na vaše nejčastější otázky</p>
+  </div>
+
+  <!-- OPRAVENO - 2 samostatné sloupce -->
+  <div class="faq-grid" id="faqGrid">
+    
+    <!-- Levý sloupec - první 7 položek -->
+    <div class="faq-column">
+      
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-gift"></i></div>
+            <span>Mohu někde dostat věci zadarmo?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Nejčastěji jsou to právě kity, příkaz <span class="cmm">/kit</span>, samozřejmě VIP mají mnohem lepší kity</p>
+            <p>- Eventy, které pořádá vedení či hráči na serveru.</p>
+            <p>- Hlasováním na serveru, příkaz <span class="cmm">/vote</span> (Votebody se vám přičtou hned, spolu s nimi obdržíte taky vote klíč, voteparty klíč dostanete až po dovýšení VoteParty)</p>
+            <p>- Votebody získané z hlasování můžete využít ve <span class="cmm">/voteshop</span></p>
+            <p>- Nahraným časem můžeš otevírat odměny pomocí <span class="cmm">/hodiny</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-home"></i></div>
+            <span>Jaké je nastavování residence?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Automatické založení resky: <span class="cmm">/res auto</span></p>
+            <p>- Ruční založení resky: Vybráním krajních bodů dřevěnou motykou a poté <span class="cmm">/res select vert</span> a nakonec <span class="cmm">/res create &lt;název&gt;</span></p>
+            <p>- Rozšíření resky: <span class="cmm">/res expand &lt;jméno_resky&gt; &lt;počet_bloků&gt;</span></p>
+            <p>- Přidání hráče: <span class="cmm">/res padd &lt;jméno&gt;</span></p>
+            <p>- Odebrání hráče: <span class="cmm">/res pdel &lt;jméno&gt;</span></p>
+            <p>- Permise: <span class="cmm">/res pset &lt;jméno&gt; &lt;vlajka&gt; true</span></p>
+            <p>- Vlajky: <span class="cmm">/res set</span></p>
+            <p>- Darování: <span class="cmm">/res give &lt;reska&gt; &lt;jméno&gt;</span></p>
+            <p>- Limit: <span class="cmm">/res limits</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <span>Jak nastavím celkově pwarp?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Založení warpu: <span class="cmm">/pwarp set &lt;název&gt;</span></p>
+            <p>- Smazání warpu: <span class="cmm">/pwarp remove &lt;název&gt;</span></p>
+            <p>- Nastavení: <span class="cmm">/pwarp settings &lt;název&gt;</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-coins"></i></div>
+            <span>Jak mohu vydělávat?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Přes zaměstnání: <span class="cmm">/prace</span></p>
+            <p>- Přes chestshopy a aukce (<span class="cmm">/ah</span>)</p>
+            <p>- Výkup Itemů: <span class="cmm">/shop</span></p>
+            <p>- Obchodování: <span class="cmm">/trade</span></p>
+            <p>- Rybaření: <span class="cmm">/fish menu</span></p>
+            <p>Více info v návodu <a href="#" class="text-primary">zde</a>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-briefcase"></i></div>
+            <span>Jak funguje zaměstnání?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Menu práce: <span class="cmm">/prace</span></p>
+            <p>- Info o výdělcích: <span class="cmm">/jobs info &lt;práce&gt;</span></p>
+            <p>- Statistiky: <span class="cmm">/jobs stats &lt;jméno&gt;</span></p>
+            <p>- Top jobs: <span class="cmm">/jobs top &lt;práce&gt;</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-gavel"></i></div>
+            <span>Jak funguje aukce?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Aukce slouží k obchodování mezi hráči.</p>
+            <p>- Menu: <span class="cmm">/ah</span></p>
+            <p>- Prodej: <span class="cmm">/ah sell &lt;cena&gt; &lt;počet&gt;</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-store"></i></div>
+            <span>Jak si založím obchod?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>Položte bednu a na ni cedulku:</p>
+            <div class="code-block">
+              &lt;Váš_Nick&gt;<br>
+              &lt;Množství&gt;<br>
+              B &lt;Cena&gt;<br>
+              &lt;Název_Itemu&gt;
+            </div>
+            <p>Název itemu zjistíte pomocí <span class="cmm">/iinfo</span>.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Pravý sloupec - zbývajících 7 položek -->
+    <div class="faq-column">
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-tags"></i></div>
+            <span>Jak si nastavím tag?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Tagy získáte z beden nebo eventů.</p>
+            <p>- Nastavení: <span class="cmm">/tags</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-palette"></i></div>
+            <span>Jak si obarvím nick?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>Pouze pro <strong>VIP Ultima+</strong>.</p>
+            <p>- Příkaz: <span class="cmm">/nick &lt;barvy&gt;Jméno</span></p>
+            <p>- Příklad: <span class="cmm">/nick &amp;4&amp;lPepa</span> (Červený a Tučný)</p>
+            <p>- RGB (Hex) barvy: <span class="cmm">/nick {#RRGGBB}Jméno</span></p>
+            <p>- Gradienty: <span class="cmm">/nick {#123456&gt;}Jméno{#abcdef&lt;}</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-crown"></i></div>
+            <span>Jak funguje VIP?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Aktivuje se automaticky při platbě PayPalem.</p>
+            <p>- Přehled výhod: <span class="cmm">/vip</span></p>
+            <p>- Je globální pro celou síť.</p>
+            <p>- Všechny metody v <a href="#" class="text-primary">obchodě</a>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-money-bill-wave"></i></div>
+            <span>Jak utrácet peníze?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Herní Coiny: <span class="cmm">/shop</span>, <span class="cmm">/ah</span></p>
+            <p>- Halcoiny (Prémiová měna): <span class="cmm">/shop</span> (Klíče, atd.)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-fish"></i></div>
+            <span>Co jsou to Entropy?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Měna pro rybaření (vylepšování totemu, výroba augmentů).</p>
+            <p>- Získání: rybaření, kuchání ryb, dodávky.</p>
+            <p>- Info: <span class="cmm">/fish menu</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-ticket-alt"></i></div>
+            <span>Co je to Halpass?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- BattlePass systém s úkoly a odměnami.</p>
+            <p>- Free verze (základní odměny) a Premium verze (více klíčů a kosmetiky).</p>
+            <p>- Příkaz: <span class="cmm">/halpass</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <div class="q-content">
+            <div class="q-icon"><i class="fas fa-layer-group"></i></div>
+            <span>Co je to Rank?</span>
+          </div>
+          <i class="fas fa-chevron-right toggle-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="answer-content">
+            <p>- Hodnosti úkolů, které odemykají výhody.</p>
+            <p>- Tvůj rank: <span class="cmm">/rank</span></p>
+            <p>- Seznam: <span class="cmm">/ranklist</span></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <p>
+    Vytvořeno s <i class="fas fa-heart" style="color: var(--primary);"></i> od 
+    <a href="https://drezyss.vercel.app/" target="_blank">Drezyssdev</a> 
+    <span style="opacity: 0.5;">|</span> 
+    © 2026 CRAFTCORE
+  </p>
+</footer>
+
+<script>
+  // Particles
+  const particlesContainer = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 15 + 's';
+    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+    particlesContainer.appendChild(particle);
+  }
+
+  // Navbar scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  // Mobile menu
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuOverlay = document.getElementById('menuOverlay');
+
+  function closeMenu() {
+    mobileMenu.classList.remove('open');
+    menuOverlay.classList.remove('active');
+    menuToggle.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function openMenu() {
+    mobileMenu.classList.add('open');
+    menuOverlay.classList.add('active');
+    menuToggle.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  menuToggle.addEventListener('click', () => {
+    mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  menuOverlay.addEventListener('click', closeMenu);
+
+  document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && mobileMenu.classList.contains('open')) {
+      closeMenu();
+    }
+  });
+
+  // Active nav state
+  const currentPath = window.location.pathname;
+  document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href && (currentPath.includes(href) || (currentPath === '/' && href === 'index.html'))) {
+      link.classList.add('active');
+    }
+  });
+
+  // FAQ toggle - OPRAVENO (Event Delegation)
+  const faqGrid = document.getElementById('faqGrid');
+  
+  faqGrid.addEventListener('click', function(e) {
+    const button = e.target.closest('.faq-question');
+    if (!button) return;
+    
+    const faqItem = button.closest('.faq-item');
+    const isCurrentlyActive = faqItem.classList.contains('active');
+    
+    // Zavřít VŠECHNY otevřené karty
+    document.querySelectorAll('.faq-item.active').forEach(openItem => {
+      openItem.classList.remove('active');
+    });
+    
+    // Otevřít pouze pokud nebyla aktivní
+    if (!isCurrentlyActive) {
+      faqItem.classList.add('active');
+    }
+  });
+</script>
+
+</body>
+</html>
